@@ -16,6 +16,11 @@ import { Button } from "@/components/ui/button";
 import { Login } from "@/lib/zodSchema";
 import { BriefcaseBusiness, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { useLoginMutation } from "@/app/redux/api/authApi";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { loginUser } from "@/app/redux/features/authSlice";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,8 +34,26 @@ const LoginPage = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
+  const [login, { isLoading }] = useLoginMutation();
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const onSubmit = async (data) => {
+    try {
+      const res = await login(data).unwrap();
+      toast.success(res.message);
+      console.log(res);
+      dispatch(loginUser(res.user));
+
+      if (res.user.role === "admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/user/dashboard");
+      }
+    } catch (error) {
+      const message = error?.data?.message || "Something went wrong!";
+      toast.error(message);
+    }
   };
 
   const passwordVisibleAndHide = () => {
@@ -45,13 +68,18 @@ const LoginPage = () => {
       </div>
 
       {/* Title */}
-      <h2 className="text-2xl font-bold text-center mb-1">Login to Your Account</h2>
+      <h2 className="text-2xl font-bold text-center mb-1">
+        Login to Your Account
+      </h2>
       <p className="text-sm text-gray-500 mb-6 text-center">
         Fill the form below to access your account
       </p>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-5">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-5"
+        >
           {/* Email */}
           <FormField
             control={form.control}
@@ -99,14 +127,12 @@ const LoginPage = () => {
             )}
           />
 
-          {/* Submit */}
-          <Button type="submit" className="w-full">
-            Login
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Login"}
           </Button>
         </form>
       </Form>
 
-      {/* Footer links */}
       <div className="mt-6 w-full text-center space-y-1 text-sm text-gray-600">
         <p>
           Don’t have an account?{" "}
