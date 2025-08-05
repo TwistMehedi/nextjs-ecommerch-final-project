@@ -1,31 +1,41 @@
 import { connectDB } from "@/lib/database";
 import { Product } from "@/models/productmodel";
+import { User } from "@/models/userModel";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
+  await connectDB();
 
-    await connectDB();
+   try {
+    const { searchParams } = new URL(req.url);
 
-  try {
-    const products = await Product.find({});
+  const name = searchParams.get("name")?.toLowerCase();
+  const price = searchParams.get("price");
 
-    if (!products || products.length === 0) {
-      return NextResponse.json(
-        { message: "Products not found", success: false },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(
-      { message: "Products fetched successfully", success: true, data: products },
-      { status: 200 }
-    );
-    
-  } catch (error) {
-    console.log(error)
-    return NextResponse.json(
-      { message: "Server error while fetching products", success: false },
-      { status: 500 }
-    );
+  let query = {};
+ 
+  if (name) {
+    query.name = { $regex: name, $options: "i" };
   }
+ 
+  if (price.includes("-")) {
+  const [min, max] = price.split("-").map(Number);
+  query.price = {
+    $gte: isNaN(min) ? 0 : min,
+    $lte: isNaN(max) ? Number.MAX_SAFE_INTEGER : max,
+  };
+} else {
+  const maxPrice = parseFloat(price);
+  if (!isNaN(maxPrice)) {
+    query.price = { $lte: maxPrice };
+  }
+}
+
+
+  const products = await Product.find(query).populate("user", ["name", "image"]);
+
+  return NextResponse.json(products);
+   } catch (error) {
+    console.log(error)
+   }
 }
