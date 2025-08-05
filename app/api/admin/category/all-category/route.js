@@ -1,5 +1,4 @@
-// app/api/categories/route.ts
-import { connectDB } from "@/lib/database";
+  import { connectDB } from "@/lib/database";
 import { Category } from "@/models/categoryModel";
 import { NextResponse } from "next/server";
 
@@ -30,6 +29,7 @@ export async function GET(req) {
     } else {
      
       categories = await Category.find({}).sort({ createdAt: -1 });
+      // console.log(categories)
     }
 
     return NextResponse.json(
@@ -41,6 +41,7 @@ export async function GET(req) {
       { status: 200 }
     );
   } catch (error) {
+    console.log(error.message);
     return NextResponse.json(
       {
         message: "Category fetch server error",

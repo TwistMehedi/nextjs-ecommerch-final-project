@@ -48,8 +48,8 @@ const Menu = () => {
             <SidebarMenu>
               <SubMenu
                 texts={[
-                  { title: "Products", url: "/admin/dashboard/allproducts" },
-                  { title: "Add Product", url: "/admin/dashboard/add-product" },
+                  { title: "Products", url: "/admin/dashboard/products/allproducts" },
+                  { title: "Add Product", url: "/admin/dashboard/products/add-product" },
                 ]}
               />
             </SidebarMenu>

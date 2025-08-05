@@ -49,7 +49,8 @@ const LoginPage = () => {
         router.push("/admin/dashboard");
       } else {
         router.push("/user/dashboard");
-      }
+      };
+      
     } catch (error) {
       const message = error?.data?.message || "Something went wrong!";
       toast.error(message);
