@@ -1,3 +1,4 @@
+import { isAuthenticated } from "@/app/api/middleware/isAuthenticated";
 import { connectDB } from "@/lib/database";
 import { Product } from "@/models/productmodel";
 import { User } from "@/models/userModel";
@@ -5,6 +6,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(req) {
   await connectDB();
+  
+  const auth = await isAuthenticated(req, ["admin"]);
+ if (auth.status !== 200) {
+    return NextResponse.json({ message: auth.message }, { status: auth.status });
+  };
 
    try {
     const { searchParams } = new URL(req.url);
@@ -31,11 +37,20 @@ export async function GET(req) {
   }
 }
 
-
   const products = await Product.find(query).populate("user", ["name", "image"]);
+
+  if(products.length < 0){
+    return NextResponse.json({
+      message: "Products not found",
+      success: false,
+      products:[]
+    })
+  ,{status:404}};
+
 
   return NextResponse.json(products);
    } catch (error) {
     console.log(error)
+    return NextResponse.json({message:"Admin all products server error", success: false},{status:500})
    }
 }

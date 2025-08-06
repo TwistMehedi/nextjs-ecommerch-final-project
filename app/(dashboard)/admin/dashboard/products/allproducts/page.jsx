@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import useFetch from "@/hooks/useFeatch";
+import Link from "next/link";
 
 const AllProducts = () => {
   const [priceRange, setPriceRange] = useState(2500);
   const [search, setSearch] = useState("");
 
-  // Build the query string conditionally
-  const queryParams = [];
+   const queryParams = [];
 
   if (search) {
     queryParams.push(`name=${encodeURIComponent(search)}`);
@@ -80,6 +80,7 @@ const AllProducts = () => {
             >
               <h3 className="font-semibold mb-2">{product?.name}</h3>
               <p className="text-gray-600">Price: ${product?.price}</p>
+              <Link href={`/admin/dashboard/products/product/${product._id}`}>Details</Link>
             </div>
           ))}
       </div>

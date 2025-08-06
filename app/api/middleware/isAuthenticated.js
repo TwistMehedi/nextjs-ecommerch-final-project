@@ -1,9 +1,10 @@
 
 import jwt from "jsonwebtoken";
-
- export const isAuthenticated = async (req, allowedRoles = []) => {
+ 
+ export const isAuthenticated = async (req, allowedRoles = "") => {
   try {
-     const token = req.cookies?.get("token")?.value;
+     const token = req.cookies.get("token")?.value;
+      // console.log("token",token);
 
     if (!token) {
       return {
@@ -23,7 +24,7 @@ import jwt from "jsonwebtoken";
 
      return {
       status: 200,
-      user: decoded.userId,  
+       userId : decoded.userId,  
     };
   } catch (error) {
     return {

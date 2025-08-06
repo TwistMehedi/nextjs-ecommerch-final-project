@@ -19,7 +19,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { useLoginMutation } from "@/app/redux/api/authApi";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "@/app/redux/features/authSlice";
 
 const LoginPage = () => {
@@ -34,6 +34,10 @@ const LoginPage = () => {
     },
   });
 
+  const {user} = useSelector((state)=> state.user);
+  console.log(user);
+
+
   const [login, { isLoading }] = useLoginMutation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -45,7 +49,7 @@ const LoginPage = () => {
       console.log(res);
       dispatch(loginUser(res.user));
 
-      if (res.user.role === "admin") {
+      if (user?.role === "admin") {
         router.push("/admin/dashboard");
       } else {
         router.push("/user/dashboard");
