@@ -8,7 +8,7 @@ export async function GET(req, {params }){
     
     const id = params.id;
 
-    console.log(id);
+    
 
   if (!id) {
     return NextResponse.json({ message: "Missing ID" }, { status: 400 });

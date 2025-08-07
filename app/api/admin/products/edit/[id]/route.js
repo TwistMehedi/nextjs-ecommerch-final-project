@@ -5,13 +5,15 @@ import { NextResponse } from "next/server";
 export async function PUT(req, { params }) {
   await connectDB();
 
-  const id = params.id;
-
+  const id = params?.id;
+// console.log(id)
   try {
     const body = await req.json();
     const { name, mrp, price } = body;
-
+    
     const product = await Product.findById(id);
+    // console.log(product);
+
     if (!product) {
       return NextResponse.json(
         { message: "Product not found", success: false },
@@ -22,16 +24,17 @@ export async function PUT(req, { params }) {
     if (name) product.name = name;
     if (mrp) product.mrp = mrp;
     if (price) product.price = price;
+    // if (description) product.descrption = description;
 
-    await product.save();
+    const res = await product.save();
+console.log(res);
 
     return NextResponse.json(
       { message: "Product updated successfully", success: true, product },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Product edit error:", error);
-    return NextResponse.json(
+     return NextResponse.json(
       { message: "Product edit server error", success: false },
       { status: 500 }
     );

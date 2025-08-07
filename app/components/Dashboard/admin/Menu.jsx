@@ -14,7 +14,8 @@ const Menu = () => {
   const [isOpen, setIsOpen] = useState({
     products: false,
     gallery: false,
-    category: false
+    category: false,
+    coupon: false
   });
 
   const toggleMenu = (key) => {
@@ -82,6 +83,37 @@ const Menu = () => {
                 texts={[
                   { title: "Add Category", url: "/admin/dashboard/category/add-category" },
                   { title: "All Cagtegory", url: "/admin/dashboard/category/all-category" },
+                ]}
+              />
+            </SidebarMenu>
+          </div>
+        )}
+      </SidebarGroupContent>
+
+      <SidebarGroupContent>
+        <SidebarMenu asChild>
+          <Slot>
+            <button
+              onClick={() => toggleMenu("coupon")}
+              className="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            >
+              <span>🛒 Coupon</span>
+              {isOpen.coupon ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </button>
+          </Slot>
+        </SidebarMenu>
+
+        {isOpen.coupon && (
+          <div className="ml-6 mt-1 space-y-1 text-sm">
+            <SidebarMenu>
+              <SubMenu
+                texts={[
+                  { title: "Add Coupon", url: "/admin/dashboard/coupon/add" },
+                  { title: "All Coupon", url: "/admin/dashboard/coupon/all" },
                 ]}
               />
             </SidebarMenu>

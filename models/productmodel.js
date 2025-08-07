@@ -12,7 +12,7 @@ const productsSchema = new mongoose.Schema(
 ],
   
     price: { type: Number, min: 250, max: 2500, required: true },
-   description: { type: String, required: true },
+    description: { type: String },
     discount: { type: Number, required: true },
     isPublish: { type: Boolean, default: false },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
