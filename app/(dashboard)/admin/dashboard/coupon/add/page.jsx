@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,33 +18,52 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Page = () => {
-  const codeSchema = couponCodeValidation.pick({ code: true });
+
+  const fullCouponSchema = couponCodeValidation.pick({
+    code: true,
+    discountPercentage: true,
+    minShoppingPrice: true,
+    validity: true,
+  });
+
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(codeSchema),
+    resolver: zodResolver(fullCouponSchema),
     defaultValues: {
       code: "",
+      discountPercentage: 0,
+      minShoppingPrice: 0,
+      validity: "",
     },
   });
 
- const onSubmit = async (data) => {
-  setIsLoading(true);
-  try {
-    const res = await axios.post("/api/admin/coupon/add", data);
-    toast.success(res.data.message);
-    form.reset();
-  } catch (error) {
-    toast.error(error.response?.data?.message || "Something went wrong");
-  } finally {
-    setIsLoading(false);
-  }
-};
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    try {
+       const payload = {
+        code: data.code,
+        discountPercentage: Number(data.discountPercentage),
+        minShoppingPrice: Number(data.minShoppingPrice),
+        validity: new Date(data.validity),
+      };
+
+      const res = await axios.post("/api/admin/coupon/add", payload);
+      toast.success(res.data.message);
+      form.reset();
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="max-w-xl mx-auto py-10">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        
           <FormField
             control={form.control}
             name="code"
@@ -52,7 +71,58 @@ const Page = () => {
               <FormItem>
                 <FormLabel>Coupon Code</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter coupon code" {...field} />
+                  <Input type="number" placeholder="Enter coupon code" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+       
+          <FormField
+            control={form.control}
+            name="discountPercentage"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Discount Percentage</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Enter discount %"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+ 
+          <FormField
+            control={form.control}
+            name="minShoppingPrice"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Minimum Shopping Price</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Enter minimum price"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+ 
+          <FormField
+            control={form.control}
+            name="validity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Validity Date</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

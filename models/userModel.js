@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
       street: { type: String, default: null },
     },
     image: {
-      url: { type: String, default: "secure_url" },
+      secure_url: { type: String, default: "/default-avatar.png" },
       public_url: { type: String, default: "public_url" },
     },
     isVerified: {

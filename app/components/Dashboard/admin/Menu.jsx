@@ -11,11 +11,13 @@ import SubMenu from "./SubMenu";
 import { Slot } from "@radix-ui/react-slot";
 
 const Menu = () => {
+
   const [isOpen, setIsOpen] = useState({
     products: false,
     gallery: false,
     category: false,
-    coupon: false
+    coupon: false,
+    customer: false
   });
 
   const toggleMenu = (key) => {
@@ -114,6 +116,37 @@ const Menu = () => {
                 texts={[
                   { title: "Add Coupon", url: "/admin/dashboard/coupon/add" },
                   { title: "All Coupon", url: "/admin/dashboard/coupon/all" },
+                ]}
+              />
+            </SidebarMenu>
+          </div>
+        )}
+      </SidebarGroupContent>
+
+      <SidebarGroupContent>
+        <SidebarMenu asChild>
+          <Slot>
+            <button
+              onClick={() => toggleMenu("customer")}
+              className="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            >
+              <span>🛒 Customer</span>
+              {isOpen.customer ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </button>
+          </Slot>
+        </SidebarMenu>
+
+        {isOpen.customer && (
+          <div className="ml-6 mt-1 space-y-1 text-sm">
+            <SidebarMenu>
+              <SubMenu
+                texts={[
+                  { title: "Customers", url: "/admin/dashboard/customers" },
+                  // { title: "All Coupon", url: "/admin/dashboard/coupon/all" },
                 ]}
               />
             </SidebarMenu>
