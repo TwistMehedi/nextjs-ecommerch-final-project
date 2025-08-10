@@ -36,7 +36,7 @@ export async function GET(req) {
       {
         message: "Categories fetched successfully",
         success: true,
-        data: categories,
+          categories,
       },
       { status: 200 }
     );
