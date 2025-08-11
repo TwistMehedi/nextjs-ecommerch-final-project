@@ -1,4 +1,4 @@
-import AdminSidebar from "@/app/components/Dashboard/admin/AdminSidebar";
+// import AdminSidebar from "@/app/components/Dashboard/admin/AdminSidebar";
 import React from "react";
 
 const AdminDashboard = () => {

@@ -1,6 +1,7 @@
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { ReduxProvider } from "./redux/provider";
+import Navbar from "./components/Navbar";
  
 
 export const metadata = {
@@ -14,7 +15,12 @@ export default function RootLayout({ children }) {
       <body
         className={`  antialiased`}
       >
-        <ReduxProvider>{children}</ReduxProvider>
+        
+        <ReduxProvider>
+          <Navbar/>
+          {children}
+          
+          </ReduxProvider>
         <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>

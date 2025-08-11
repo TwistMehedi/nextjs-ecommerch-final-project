@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import useFetch from "@/hooks/useFeatch";
 
 import {
+  // import { product } from '@/lib/zodSchema';
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -22,6 +23,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function ProductPage() {
   const [category, setCategory] = useState("all");
@@ -59,6 +62,7 @@ export default function ProductPage() {
 
   const { data } = useFetch(`/api/users/products${queryString}`);
   const products = data?.products || [];
+  console.log(products)
   const totalPages = data?.totalPages || 1;
 
   const { data: categoryData } = useFetch(`/api/admin/category/get`);
@@ -71,9 +75,21 @@ export default function ProductPage() {
     setPage(1);
   };
 
+  const addProductToCart = async (product) => {
+    const { _id, name, price, images } = product;
+    try {
+      const res = await axios.post("/api/users/cart", {_id,name,price,images});
+      toast.success(res.data?.message);
+    } catch (error) {
+       console.log(error);
+      toast.error(
+        error?.response?.data?.message || "Add product to cart client problem"
+      );
+    }
+  };
+
   return (
     <main className="max-w-7xl mx-auto px-6 py-12">
-     
       <section className="mb-12 text-center md:text-left md:flex md:items-center md:justify-between">
         <div className="max-w-xl mx-auto md:mx-0">
           <h1 className="text-5xl font-extrabold mb-4 leading-tight">
@@ -87,7 +103,7 @@ export default function ProductPage() {
         </div>
         <div className="hidden md:block w-1/2"></div>
       </section>
- 
+
       <section className="mb-8 flex flex-wrap gap-4 items-center justify-center md:justify-start">
         <Select
           onValueChange={(value) => {
@@ -146,31 +162,36 @@ export default function ProductPage() {
           Clear Filters
         </Button>
       </section>
- 
+
       <section>
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
           {products.length > 0 ? (
-            products.map(({ _id, name, description, price, image }) => (
+            products.map((product) => (
+              
               <div
-                key={_id}
+                key={product._id}
                 className="border rounded-lg shadow-md overflow-hidden flex flex-col"
               >
                 <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
                   <img
-                    src={image?.secure_url}
-                    alt={name}
+                    src={product?.images?.[0]?.secure_url}
+                    alt={product?.name}
                     className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
                   />
                 </div>
 
                 <div className="p-4 flex flex-col flex-grow">
-                  <h2 className="text-xl font-semibold mb-2">{name}</h2>
-                  <p className="text-gray-600 flex-grow">{description}</p>
+                  <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
+                  <p className="text-gray-600 flex-grow">{product.description}</p>
                   <div className="mt-4 flex items-center justify-between">
                     <span className="text-lg font-bold text-indigo-600">
-                      ${price}
+                      ${product.price}
                     </span>
-                    <Button>Add to Cart</Button>
+                    <Button
+                      onClick={()=>addProductToCart(product)}
+                    >
+                      Add to Cart
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -182,7 +203,7 @@ export default function ProductPage() {
           )}
         </div>
       </section>
- 
+
       <section className="mt-10 flex justify-center">
         <Pagination>
           <PaginationContent>
