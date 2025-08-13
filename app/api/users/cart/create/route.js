@@ -1,13 +1,13 @@
 import { connectDB } from "@/lib/database";
 import { Cart } from "@/models/cartModel";
-import { isAuthenticated } from "../../middleware/isAuthenticated";
+import { isAuthenticated } from "../../../middleware/isAuthenticated";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
   await connectDB();
 
   try {
-    const auth = await isAuthenticated(req, ["admin"]);
+    const auth = await isAuthenticated(req, ["user","admin"]);
     if (auth.status !== 200) {
       return NextResponse.json(
         { message: auth.message },

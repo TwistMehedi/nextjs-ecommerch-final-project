@@ -78,7 +78,7 @@ export default function ProductPage() {
   const addProductToCart = async (product) => {
     const { _id, name, price, images } = product;
     try {
-      const res = await axios.post("/api/users/cart", {_id,name,price,images});
+      const res = await axios.post("/api/users/cart/create", {_id,name,price,images});
       toast.success(res.data?.message);
     } catch (error) {
        console.log(error);
