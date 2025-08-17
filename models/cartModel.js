@@ -16,6 +16,7 @@ const cartSchema = new mongoose.Schema(
         },
         name: String,
         price: Number,
+        total: Number,
         image: {
           secure_url: String,
           public_id: String,
@@ -23,6 +24,8 @@ const cartSchema = new mongoose.Schema(
         quantity: { type: Number, default: 1 },
       },
     ],
+     finalPrice:{type: Number, default:0},
+     discountAmount:{type: Number, default:0}
   },
   { timestamps: true }
 );

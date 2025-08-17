@@ -33,4 +33,4 @@ export async function DELETE(req) {
       { status: 500 }
     );
   }
-}
+};

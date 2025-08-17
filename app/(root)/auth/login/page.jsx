@@ -24,6 +24,7 @@ import { loginUser } from "@/app/redux/features/authSlice";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  
   const loginSchema = Login.pick({ email: true, password: true });
 
   

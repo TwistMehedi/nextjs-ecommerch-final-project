@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/pagination";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Link from "next/link";
 
 export default function ProductPage() {
   const [category, setCategory] = useState("all");
@@ -167,7 +168,7 @@ export default function ProductPage() {
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
           {products.length > 0 ? (
             products.map((product) => (
-              
+              // console.log(product),
               <div
                 key={product._id}
                 className="border rounded-lg shadow-md overflow-hidden flex flex-col"
@@ -181,7 +182,12 @@ export default function ProductPage() {
                 </div>
 
                 <div className="p-4 flex flex-col flex-grow">
-                  <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
+                  <Link href={`/product/${product._id}`} className="mb-2">
+                   <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
+                  </Link>
+                   <span className="text-sm text-gray-500">
+                      {product.category}
+                    </span>
                   <p className="text-gray-600 flex-grow">{product.description}</p>
                   <div className="mt-4 flex items-center justify-between">
                     <span className="text-lg font-bold text-indigo-600">
