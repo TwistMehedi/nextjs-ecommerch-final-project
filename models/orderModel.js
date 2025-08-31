@@ -21,6 +21,7 @@ const orderSchema = new mongoose.Schema(
         total: Number,  
       },
     ],
+    status:{type: String, enum:["Pending", "On The Way", "Delivered", "Cancelled"], default: "Pending"},
     deliveryInfo: {
       fullName: { type: String, required: true },
       phone: { type: String, required: true },
@@ -32,7 +33,7 @@ const orderSchema = new mongoose.Schema(
     deliveryFee: { type: Number, default: 0 },
     discountTotal: { type: Number, default: 0 },
     subtotal: { type: Number, required: true },
-    paymentStatus: { type: String, enum:["Pending", "On The Way", "Complated", "Paid"], default: "Pending" },
+    paymentStatus: { type: String, enum:["Pending", "Paid"], default: "Pending" },
     createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }

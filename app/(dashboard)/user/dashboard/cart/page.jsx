@@ -13,28 +13,21 @@ import {
 } from "@/components/ui/table";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { loadStripe } from "@stripe/stripe-js";
-import getStripe from "@/lib/stripe";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CartItem from "@/app/components/Dashboard/User/CartItem";
-// import { Button } from "@/components/ui/button";
+import { useProduct } from "@/contexts/useContext";
 
 const Cart = () => {
-  const [couponInput, setCouponInput] = useState("");
-  const [discountAmount, setDiscountAmount] = useState(0);
-  const [disscountPercentage, setDisscountPercentage] = useState("");
-
   const { data, error } = useFetch("/api/users/cart/get");
   const carts = data?.cartsItems || [];
-  // console.log(carts._id)
   const itemsFromApi = carts[0]?.items || [];
 
-  const { data: couponsData } = useFetch("/api/admin/coupon/all");
-  const coupons = couponsData?.data || [];
-  // console.log(coupons);
-
+  const [ttt, setTtt] = useState([]);
+  console.log("ttt",ttt) //akhane pacchi 
   const [cartItems, setCartItems] = useState([]);
-  console.log(cartItems);
+  // console.log(cartItems);
+
+  const {product, setProduct} = useProduct();
+  console.log(product); // akhaneo pacchi 
 
   useEffect(() => {
     if (error) {
@@ -42,16 +35,19 @@ const Cart = () => {
     }
   }, [error]);
 
+  
+
   useEffect(() => {
     if (itemsFromApi && itemsFromApi.length !== cartItems.length) {
       setCartItems(itemsFromApi);
     }
   }, [itemsFromApi, cartItems.length]);
 
-  if (!data) {
-    return <div className="p-4 text-center">Loading cart...</div>;
-  }
-
+ useEffect(() => {
+    setProduct(cartItems);
+    setTtt(cartItems) 
+  }, [cartItems, setProduct]);
+  
   if (cartItems.length === 0) {
     return <div className="p-4 text-center">Your cart is empty</div>;
   }
@@ -123,9 +119,6 @@ const Cart = () => {
       toast.error(error?.response?.data?.message || "Cart update failed");
     }
   };
-
-  // const couponCodes = coupons?.map((coupon) => coupon?.code) || [];
-  // console.log(couponCodes);
 
   const totalPrice = cartItems.reduce((total, cartItem) => {
     return total + (cartItem.total || cartItem.price * cartItem.quantity);
@@ -213,11 +206,12 @@ const Cart = () => {
         </Button>
 
         <div className="w-full max-w-md mx-auto p-2">
-          <CartItem cart={cartItems} totalPrice={totalPrice}
-            buttonText={"Checkout"}/>
-            
+          <CartItem
+            cart={cartItems}
+            totalPrice={totalPrice}
+            buttonText={"Checkout"}
+          />
         </div>
-        
       </div>
     </div>
   );

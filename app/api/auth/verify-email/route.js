@@ -18,9 +18,7 @@ export async function POST(req) {
 
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
-    const { fullName, email, password } = decoded;
-
-    await connectDB();
+    const { fullName, email, password , role} = decoded;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -34,6 +32,7 @@ export async function POST(req) {
       fullName,
       email,
       password,
+      role,
       isVerified:true
     });
 

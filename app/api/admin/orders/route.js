@@ -1,11 +1,10 @@
-import { NextResponse } from "next/server";
-import { isAuthenticated } from "../../middleware/isAuthenticated";
 import { connectDB } from "@/lib/database";
+import { isAuthenticated } from "../../middleware/isAuthenticated";
+import { NextResponse } from "next/server";
 import orderModel from "@/models/orderModel";
 
 export async function GET(req) {
   await connectDB();
-
   try {
     const auth = await isAuthenticated(req, ["admin"]);
     if (auth.status !== 200) {
@@ -15,27 +14,17 @@ export async function GET(req) {
       );
     }
 
-     const users = await orderModel.find().populate("user");
-
-     
-     const uniqueUsers = [
-      ...new Map(users.map((o) => [o.user._id.toString(), o.user])).values(),
-    ];
-
-    // console.log(uniqueUsers)
+    const orders = await orderModel.find();
+    // console.log(orders);
     return NextResponse.json(
-      {
-        message: "Users fetched successfully",
-        success: true,
-          uniqueUsers,
-      },
+      { message: "All orders founded", success: true, orders },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error fetching orders:", error);
     return NextResponse.json(
       {
-        message: "Users fetch server error",
+        message: "Orders fetch server error",
         success: false,
       },
       { status: 500 }

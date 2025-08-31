@@ -1,4 +1,4 @@
-import { isAuthenticated } from "@/app/api/middleware/isAuthenticated";
+import { isAuthenticated } from "@/app/api/middleware/isAuthenticated"; 
 import { connectDB } from "@/lib/database";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -25,21 +25,31 @@ export async function POST(req) {
       itemsTotal,
       discountTotal,
       subtotal,
-      deliveryFee,
+      deleveryCost,
     } = await req.json();
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: products.map((p) => ({
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: p.name,
+      line_items: [
+        // Map products normally
+        ...products.map((p) => ({
+          price_data: {
+            currency: "usd",
+            product_data: { name: p.name },
+            unit_amount: Math.round(p.price * 100), // product price
           },
-          unit_amount: Math.round(p.price * 100),
+          quantity: p.quantity, // cart quantity
+        })),
+        // Add delivery cost as separate line item
+        {
+          price_data: {
+            currency: "usd",
+            product_data: { name: "Delivery Cost" },
+            unit_amount: Math.round(deleveryCost * 100),
+          },
+          quantity: 1, // delivery cost একবারই charge হবে
         },
-        quantity: p.quantity,
-      })),
+      ],
       mode: "payment",
       success_url: `http://localhost:3000/product/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `http://localhost:3000/user/dashboard/cancel`,
@@ -49,12 +59,10 @@ export async function POST(req) {
         itemsTotal,
         discountTotal,
         subtotal,
-        deliveryFee,
+        deleveryCost,
         products: JSON.stringify(products),
       },
     });
-
-    console.log("Stripe session created:", session);
 
     return NextResponse.json({ id: session.id }, { status: 200 });
   } catch (error) {
@@ -64,4 +72,4 @@ export async function POST(req) {
       { status: 500 }
     );
   }
-}
+};

@@ -2,7 +2,7 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { ReduxProvider } from "./redux/provider";
 import Navbar from "./components/Navbar";
- 
+import { ProductProvider } from "@/contexts/useContext";
 
 export const metadata = {
   title: "Eco for practice",
@@ -12,15 +12,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`  antialiased`}
-      >
-        
+      <body className={`  antialiased`}>
         <ReduxProvider>
-          <Navbar/>
-          {children}
-          
-          </ReduxProvider>
+          <ProductProvider>
+            <Navbar />
+            {children}
+          </ProductProvider>
+        </ReduxProvider>
         <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>

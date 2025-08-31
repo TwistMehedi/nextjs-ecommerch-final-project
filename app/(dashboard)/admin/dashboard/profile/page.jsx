@@ -4,9 +4,9 @@ import React from 'react'
 const Profile = () => {
   return (
     <div>
-      <WholeProfile/>
+      <WholeProfile />
     </div>
   )
-}
+};
 
-export default Profile
+export default Profile;

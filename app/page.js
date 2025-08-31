@@ -26,6 +26,7 @@ import {
 import toast from "react-hot-toast";
 import axios from "axios";
 import Link from "next/link";
+import { useProduct } from "@/contexts/useContext";
 
 export default function ProductPage() {
   const [category, setCategory] = useState("all");
@@ -69,6 +70,7 @@ export default function ProductPage() {
   const { data: categoryData } = useFetch(`/api/admin/category/get`);
   const categories = categoryData?.categories || [];
 
+ 
   const clearFilter = () => {
     setCategory("all");
     setPriceRange("all");
@@ -81,6 +83,7 @@ export default function ProductPage() {
     try {
       const res = await axios.post("/api/users/cart/create", {_id,name,price,images});
       toast.success(res.data?.message);
+      // setProduct(res);
     } catch (error) {
        console.log(error);
       toast.error(

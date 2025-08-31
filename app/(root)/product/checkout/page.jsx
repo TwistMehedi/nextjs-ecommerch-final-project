@@ -26,7 +26,8 @@ const Checkout = () => {
   const cartProducts = JSON.parse(decodeURIComponent(searchParams.get("products"))); // ata arry akahen ache ami atao backende pathe cai
   const quantity = parseInt(searchParams.get("quantity"));
   const cartsTotalPrice = parseInt(searchParams.get("totalPrice"));
-  
+  const deleveryCost = parseInt(searchParams.get("deleveryCost"));
+  // console.log(deleveryCost)
 
   const totalPrice = product && product.price * quantity;
   
@@ -78,7 +79,7 @@ const Checkout = () => {
       deliveryInfo: data.deliveryInfo,
       itemsTotal: cartsTotalPrice || totalPrice,
       subtotal: cartsTotalPrice || totalPrice,
-      deliveryFee: 0,
+      deleveryCost,
     });
 
     console.log(res);
@@ -141,7 +142,7 @@ const Checkout = () => {
           {/* Right Side: Order Summary */}
           <Card className="w-full">
             
-               <CartItem cartsProducts={cartProducts} carstPrice={cartsTotalPrice} quantity={quantity} totalPrice={totalPrice} buttonText={"Proceed to Pay"}/>
+               <CartItem shippinFee={deleveryCost} cartsProducts={cartProducts} carstPrice={cartsTotalPrice} quantity={quantity} totalPrice={totalPrice} buttonText={"Proceed to Pay"}/>
             
           </Card>
           

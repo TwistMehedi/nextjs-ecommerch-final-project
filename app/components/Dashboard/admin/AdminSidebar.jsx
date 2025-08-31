@@ -15,7 +15,7 @@ const AdminSidebar = () => {
   return (
     <Sidebar className="w-64 bg-white dark:bg-gray-900 min-h-screen text-gray-800 dark:text-white border-r dark:border-gray-700">
       <SidebarHeader className="text-xl font-bold px-4 py-4 border-b border-gray-200 dark:border-gray-700">
-        <Link href={"/admin/dashboard"}>Admin Panel</Link>
+        <Link href={"/"}>Home</Link>
       </SidebarHeader>
 
       <SidebarContent className="px-2 py-4">
